@@ -165,3 +165,309 @@
 2026-06-16 01:42:31 | INFO | P06 | ========================
 2026-06-16 01:42:53 | DEBUG | C06 | No variables found in .env
 2026-06-16 01:42:53 | DEBUG | P06 | No variables found in .env
+2026-06-16 01:43:33 | DEBUG | C06 | No variables found in .env
+2026-06-16 01:43:33 | INFO | C06 | === RUN START ===
+2026-06-16 01:43:33 | INFO | C06 | project=C06
+2026-06-16 01:43:33 | INFO | C06 | repo_dir=streaming-06-scenarios
+2026-06-16 01:43:33 | INFO | C06 | python=3.14.5
+2026-06-16 01:43:33 | INFO | C06 | os=Linux 6.6.87.2-microsoft-standard-WSL2
+2026-06-16 01:43:33 | INFO | C06 | shell=bash
+2026-06-16 01:43:33 | INFO | C06 | cwd=.
+2026-06-16 01:43:33 | INFO | C06 | github_actions=False
+2026-06-16 01:43:33 | INFO | C06 | ========================
+2026-06-16 01:43:33 | INFO | C06 | START consumer main()
+2026-06-16 01:43:33 | INFO | C06 | ========================
+2026-06-16 01:43:33 | INFO | C06 | ROOT_DIR = .
+2026-06-16 01:43:33 | INFO | C06 | DATA_DIR = data
+2026-06-16 01:43:33 | INFO | C06 | OUTPUT_CSV = data/output/consumed_sales.csv
+2026-06-16 01:43:33 | INFO | C06 | OUTPUT_DB = data/output/sales.duckdb
+2026-06-16 01:43:33 | INFO | C06 | OUTPUT_CHART = data/output/sales_chart_case.png
+2026-06-16 01:43:33 | INFO | C06 | REGIONS_CSV = data/regions.csv
+2026-06-16 01:43:33 | INFO | C06 | PRODUCTS_CSV = data/products.csv
+2026-06-16 01:43:33 | INFO | C06 | CURRENCIES_CSV = data/currencies.csv
+2026-06-16 01:43:33 | INFO | C06 | DISCOUNT_CODES_CSV = data/discount_codes.csv
+2026-06-16 01:43:33 | INFO | C06 | ========================
+2026-06-16 01:43:33 | INFO | C06 | SECTION A. Acquire
+2026-06-16 01:43:33 | INFO | C06 | ========================
+2026-06-16 01:43:33 | INFO | C06 | Loading settings from .env...
+2026-06-16 01:43:33 | INFO | C06 | KAFKA_BOOTSTRAP_SERVERS  = localhost:9092
+2026-06-16 01:43:33 | INFO | C06 | KAFKA_TOPIC              = product-sales-case
+2026-06-16 01:43:33 | INFO | C06 | KAFKA_GROUP_ID           = streaming-consumer-group-A
+2026-06-16 01:43:33 | INFO | C06 | CONSUMER_TIMEOUT_SECONDS = 10.0
+2026-06-16 01:43:33 | INFO | C06 | CONSUMER_MAX_MESSAGES    = 1000
+2026-06-16 01:43:33 | INFO | C06 | Verifying Kafka connection...
+2026-06-16 01:43:33 | INFO | C06 | Kafka port is reachable.
+2026-06-16 01:43:33 | INFO | C06 | Verifying Kafka topic...
+2026-06-16 01:43:33 | INFO | C06 | Topic 'product-sales-case' exists.
+2026-06-16 01:43:33 | INFO | C06 | Found 18 message(s) available.
+2026-06-16 01:43:33 | INFO | C06 | Creating Kafka consumer...
+2026-06-16 01:43:33 | INFO | C06 | Subscribed to topic: 'product-sales-case' (reading from beginning)
+2026-06-16 01:43:33 | INFO | C06 | ========================
+2026-06-16 01:43:33 | INFO | C06 | SECTION C. Consume and Process Messages
+2026-06-16 01:43:33 | INFO | C06 | ========================
+2026-06-16 01:43:33 | INFO | C06 | Initializing output...
+2026-06-16 01:43:33 | INFO | C06 | Output CSV cleared: consumed_sales.csv
+2026-06-16 01:43:33 | INFO | C06 | Database initialized: sales.duckdb
+2026-06-16 01:43:34 | INFO | C06 | Live chart initialized.
+2026-06-16 01:43:34 | INFO | C06 | Loading enrichment reference data...
+2026-06-16 01:43:34 | INFO | C06 | Found 6 region tax rates.
+2026-06-16 01:43:34 | INFO | C06 | Consuming messages...
+2026-06-16 01:43:34 | INFO | C06 | Waiting for up to 1000 message(s).
+2026-06-16 01:43:34 | INFO | C06 | Press CTRL+C to stop early.
+
+2026-06-16 01:43:36 | INFO | C06 | {'currency_code': 'USD', 'customer_id': 'CUST-4150', 'customer_note': 'Gift for my team', 'datetime': '2026-05-04T08:11:00Z', 'device_type': 'tablet', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': 'e7324981-a9f0-419f-b708-d0a333451fff', 'payment_method': 'paypal', 'product_id': 'PY-STREAM-005', 'quantity': '3', 'referral_source': 'paid_search', 'region_id': 'US-TX', 'unit_price': '59.99', '_kafka_key': 'US-TX', '_kafka_partition': 0, '_kafka_offset': 42}
+2026-06-16 01:43:36 | INFO | C06 | subtotal=179.97  tax=14.85  total=194.82  running_total=194.82
+2026-06-16 01:43:36 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:36 | INFO | C06 |   order=e7324981-a9f0-419f-b708-d0a333451fff
+2026-06-16 01:43:36 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:36 | INFO | C06 | order=e7324981-a9f0-419f-b708-d0a333451fff
+2026-06-16 01:43:36 | INFO | C06 | total=$194.82
+2026-06-16 01:43:36 | INFO | C06 | consumed=1
+2026-06-16 01:43:36 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:36 | INFO | C06 | total_sales=$194.82
+2026-06-16 01:43:36 | INFO | C06 | average=$194.82
+2026-06-16 01:43:36 | INFO | C06 | min=$194.82
+2026-06-16 01:43:36 | INFO | C06 | max=$194.82
+2026-06-16 01:43:36 | INFO | C06 | {'currency_code': 'USD', 'customer_id': 'CUST-1106', 'customer_note': 'Gift for my team', 'datetime': '2026-05-04T08:23:00Z', 'device_type': 'mobile', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': 'd61943e0-f543-4b5f-9c9a-18605ea4cfe5', 'payment_method': 'paypal', 'product_id': 'PY-DATA-002', 'quantity': '1', 'referral_source': 'paid_search', 'region_id': 'US-TX', 'unit_price': '49.99', '_kafka_key': 'US-TX', '_kafka_partition': 0, '_kafka_offset': 43}
+2026-06-16 01:43:36 | INFO | C06 | subtotal=49.99  tax=4.12  total=54.11  running_total=248.93
+2026-06-16 01:43:37 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:37 | INFO | C06 |   order=d61943e0-f543-4b5f-9c9a-18605ea4cfe5
+2026-06-16 01:43:37 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:37 | INFO | C06 | order=d61943e0-f543-4b5f-9c9a-18605ea4cfe5
+2026-06-16 01:43:37 | INFO | C06 | total=$54.11
+2026-06-16 01:43:37 | INFO | C06 | consumed=2
+2026-06-16 01:43:37 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:37 | INFO | C06 | total_sales=$248.93
+2026-06-16 01:43:37 | INFO | C06 | average=$124.47
+2026-06-16 01:43:37 | INFO | C06 | min=$54.11
+2026-06-16 01:43:37 | INFO | C06 | max=$194.82
+2026-06-16 01:43:37 | INFO | C06 | {'currency_code': 'CAD', 'customer_id': 'CUST-2133', 'customer_note': 'Learning at my own pace', 'datetime': '2026-05-04T08:28:00Z', 'device_type': 'desktop', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': '14da1915-8e74-47be-9e10-f7275d31af46', 'payment_method': 'paypal', 'product_id': 'PY-NLP-006', 'quantity': '1', 'referral_source': 'organic', 'region_id': 'CA-QC', 'unit_price': '54.99', '_kafka_key': 'CA-QC', '_kafka_partition': 0, '_kafka_offset': 44}
+2026-06-16 01:43:37 | INFO | C06 | subtotal=54.99  tax=8.23  total=63.22  running_total=312.15
+2026-06-16 01:43:37 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:37 | INFO | C06 |   order=14da1915-8e74-47be-9e10-f7275d31af46
+2026-06-16 01:43:37 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:37 | INFO | C06 | order=14da1915-8e74-47be-9e10-f7275d31af46
+2026-06-16 01:43:37 | INFO | C06 | total=$63.22
+2026-06-16 01:43:37 | INFO | C06 | consumed=3
+2026-06-16 01:43:37 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:37 | INFO | C06 | total_sales=$312.15
+2026-06-16 01:43:37 | INFO | C06 | average=$104.05
+2026-06-16 01:43:37 | INFO | C06 | min=$54.11
+2026-06-16 01:43:37 | INFO | C06 | max=$194.82
+2026-06-16 01:43:37 | INFO | C06 | {'currency_code': 'USD', 'customer_id': 'CUST-5333', 'customer_note': 'Highly recommend', 'datetime': '2026-05-04T08:40:00Z', 'device_type': 'mobile', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': 'd77ed935-9b28-431d-bc25-0a3fd98f4154', 'payment_method': 'paypal', 'product_id': 'PY-STREAM-005', 'quantity': '1', 'referral_source': 'organic', 'region_id': 'US-CA', 'unit_price': '59.99', '_kafka_key': 'US-CA', '_kafka_partition': 0, '_kafka_offset': 45}
+2026-06-16 01:43:37 | INFO | C06 | subtotal=59.99  tax=5.7  total=65.69  running_total=377.84
+2026-06-16 01:43:37 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:37 | INFO | C06 |   order=d77ed935-9b28-431d-bc25-0a3fd98f4154
+2026-06-16 01:43:37 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:37 | INFO | C06 | order=d77ed935-9b28-431d-bc25-0a3fd98f4154
+2026-06-16 01:43:37 | INFO | C06 | total=$65.69
+2026-06-16 01:43:37 | INFO | C06 | consumed=4
+2026-06-16 01:43:37 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:37 | INFO | C06 | total_sales=$377.84
+2026-06-16 01:43:37 | INFO | C06 | average=$94.46
+2026-06-16 01:43:37 | INFO | C06 | min=$54.11
+2026-06-16 01:43:37 | INFO | C06 | max=$194.82
+2026-06-16 01:43:37 | INFO | C06 | {'currency_code': 'USD', 'customer_id': 'CUST-8573', 'customer_note': 'Learning at my own pace', 'datetime': '2026-05-04T08:41:00Z', 'device_type': 'mobile', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': '24b91995-25f8-4ad7-8fa6-2e4c15750e5e', 'payment_method': 'apple_pay', 'product_id': 'PY-VIZ-003', 'quantity': '1', 'referral_source': 'paid_search', 'region_id': 'US-MO', 'unit_price': '39.99', '_kafka_key': 'US-MO', '_kafka_partition': 0, '_kafka_offset': 46}
+2026-06-16 01:43:37 | INFO | C06 | subtotal=39.99  tax=3.2  total=43.19  running_total=421.03
+2026-06-16 01:43:38 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:38 | INFO | C06 |   order=24b91995-25f8-4ad7-8fa6-2e4c15750e5e
+2026-06-16 01:43:38 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:38 | INFO | C06 | order=24b91995-25f8-4ad7-8fa6-2e4c15750e5e
+2026-06-16 01:43:38 | INFO | C06 | total=$43.19
+2026-06-16 01:43:38 | INFO | C06 | consumed=5
+2026-06-16 01:43:38 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:38 | INFO | C06 | total_sales=$421.03
+2026-06-16 01:43:38 | INFO | C06 | average=$84.21
+2026-06-16 01:43:38 | INFO | C06 | min=$43.19
+2026-06-16 01:43:38 | INFO | C06 | max=$194.82
+2026-06-16 01:43:38 | INFO | C06 | {'currency_code': 'CAD', 'customer_id': 'CUST-8062', 'customer_note': '', 'datetime': '2026-05-04T08:54:00Z', 'device_type': 'tablet', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': '1ec0fc8b-998c-4f43-8a66-19e1fa7d5fa8', 'payment_method': 'paypal', 'product_id': 'PY-SQL-004', 'quantity': '1', 'referral_source': 'organic', 'region_id': 'CA-ON', 'unit_price': '44.99', '_kafka_key': 'CA-ON', '_kafka_partition': 0, '_kafka_offset': 47}
+2026-06-16 01:43:38 | INFO | C06 | subtotal=44.99  tax=5.85  total=50.84  running_total=471.87
+2026-06-16 01:43:38 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:38 | INFO | C06 |   order=1ec0fc8b-998c-4f43-8a66-19e1fa7d5fa8
+2026-06-16 01:43:38 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:38 | INFO | C06 | order=1ec0fc8b-998c-4f43-8a66-19e1fa7d5fa8
+2026-06-16 01:43:38 | INFO | C06 | total=$50.84
+2026-06-16 01:43:38 | INFO | C06 | consumed=6
+2026-06-16 01:43:38 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:38 | INFO | C06 | total_sales=$471.87
+2026-06-16 01:43:38 | INFO | C06 | average=$78.64
+2026-06-16 01:43:38 | INFO | C06 | min=$43.19
+2026-06-16 01:43:38 | INFO | C06 | max=$194.82
+2026-06-16 01:43:38 | INFO | C06 | {'currency_code': 'USD', 'customer_id': 'CUST-4150', 'customer_note': 'Gift for my team', 'datetime': '2026-05-04T08:11:00Z', 'device_type': 'tablet', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': 'e7324981-a9f0-419f-b708-d0a333451fff', 'payment_method': 'paypal', 'product_id': 'PY-STREAM-005', 'quantity': '3', 'referral_source': 'paid_search', 'region_id': 'US-TX', 'unit_price': '59.99', '_kafka_key': 'US-TX', '_kafka_partition': 0, '_kafka_offset': 48}
+2026-06-16 01:43:38 | INFO | C06 | subtotal=179.97  tax=14.85  total=194.82  running_total=666.69
+2026-06-16 01:43:38 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:38 | INFO | C06 |   order=e7324981-a9f0-419f-b708-d0a333451fff
+2026-06-16 01:43:38 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:38 | INFO | C06 | order=e7324981-a9f0-419f-b708-d0a333451fff
+2026-06-16 01:43:38 | INFO | C06 | total=$194.82
+2026-06-16 01:43:38 | INFO | C06 | consumed=7
+2026-06-16 01:43:38 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:38 | INFO | C06 | total_sales=$666.69
+2026-06-16 01:43:38 | INFO | C06 | average=$95.24
+2026-06-16 01:43:38 | INFO | C06 | min=$43.19
+2026-06-16 01:43:38 | INFO | C06 | max=$194.82
+2026-06-16 01:43:38 | INFO | C06 | {'currency_code': 'USD', 'customer_id': 'CUST-1106', 'customer_note': 'Gift for my team', 'datetime': '2026-05-04T08:23:00Z', 'device_type': 'mobile', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': 'd61943e0-f543-4b5f-9c9a-18605ea4cfe5', 'payment_method': 'paypal', 'product_id': 'PY-DATA-002', 'quantity': '1', 'referral_source': 'paid_search', 'region_id': 'US-TX', 'unit_price': '49.99', '_kafka_key': 'US-TX', '_kafka_partition': 0, '_kafka_offset': 49}
+2026-06-16 01:43:38 | INFO | C06 | subtotal=49.99  tax=4.12  total=54.11  running_total=720.80
+2026-06-16 01:43:39 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:39 | INFO | C06 |   order=d61943e0-f543-4b5f-9c9a-18605ea4cfe5
+2026-06-16 01:43:39 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:39 | INFO | C06 | order=d61943e0-f543-4b5f-9c9a-18605ea4cfe5
+2026-06-16 01:43:39 | INFO | C06 | total=$54.11
+2026-06-16 01:43:39 | INFO | C06 | consumed=8
+2026-06-16 01:43:39 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:39 | INFO | C06 | total_sales=$720.80
+2026-06-16 01:43:39 | INFO | C06 | average=$90.10
+2026-06-16 01:43:39 | INFO | C06 | min=$43.19
+2026-06-16 01:43:39 | INFO | C06 | max=$194.82
+2026-06-16 01:43:39 | INFO | C06 | {'currency_code': 'CAD', 'customer_id': 'CUST-2133', 'customer_note': 'Learning at my own pace', 'datetime': '2026-05-04T08:28:00Z', 'device_type': 'desktop', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': '14da1915-8e74-47be-9e10-f7275d31af46', 'payment_method': 'paypal', 'product_id': 'PY-NLP-006', 'quantity': '1', 'referral_source': 'organic', 'region_id': 'CA-QC', 'unit_price': '54.99', '_kafka_key': 'CA-QC', '_kafka_partition': 0, '_kafka_offset': 50}
+2026-06-16 01:43:39 | INFO | C06 | subtotal=54.99  tax=8.23  total=63.22  running_total=784.02
+2026-06-16 01:43:39 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:39 | INFO | C06 |   order=14da1915-8e74-47be-9e10-f7275d31af46
+2026-06-16 01:43:39 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:39 | INFO | C06 | order=14da1915-8e74-47be-9e10-f7275d31af46
+2026-06-16 01:43:39 | INFO | C06 | total=$63.22
+2026-06-16 01:43:39 | INFO | C06 | consumed=9
+2026-06-16 01:43:39 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:39 | INFO | C06 | total_sales=$784.02
+2026-06-16 01:43:39 | INFO | C06 | average=$87.11
+2026-06-16 01:43:39 | INFO | C06 | min=$43.19
+2026-06-16 01:43:39 | INFO | C06 | max=$194.82
+2026-06-16 01:43:39 | INFO | C06 | {'currency_code': 'USD', 'customer_id': 'CUST-5333', 'customer_note': 'Highly recommend', 'datetime': '2026-05-04T08:40:00Z', 'device_type': 'mobile', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': 'd77ed935-9b28-431d-bc25-0a3fd98f4154', 'payment_method': 'paypal', 'product_id': 'PY-STREAM-005', 'quantity': '1', 'referral_source': 'organic', 'region_id': 'US-CA', 'unit_price': '59.99', '_kafka_key': 'US-CA', '_kafka_partition': 0, '_kafka_offset': 51}
+2026-06-16 01:43:39 | INFO | C06 | subtotal=59.99  tax=5.7  total=65.69  running_total=849.71
+2026-06-16 01:43:39 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:39 | INFO | C06 |   order=d77ed935-9b28-431d-bc25-0a3fd98f4154
+2026-06-16 01:43:39 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:39 | INFO | C06 | order=d77ed935-9b28-431d-bc25-0a3fd98f4154
+2026-06-16 01:43:39 | INFO | C06 | total=$65.69
+2026-06-16 01:43:39 | INFO | C06 | consumed=10
+2026-06-16 01:43:39 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:39 | INFO | C06 | total_sales=$849.71
+2026-06-16 01:43:39 | INFO | C06 | average=$84.97
+2026-06-16 01:43:39 | INFO | C06 | min=$43.19
+2026-06-16 01:43:39 | INFO | C06 | max=$194.82
+2026-06-16 01:43:39 | INFO | C06 | {'currency_code': 'USD', 'customer_id': 'CUST-8573', 'customer_note': 'Learning at my own pace', 'datetime': '2026-05-04T08:41:00Z', 'device_type': 'mobile', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': '24b91995-25f8-4ad7-8fa6-2e4c15750e5e', 'payment_method': 'apple_pay', 'product_id': 'PY-VIZ-003', 'quantity': '1', 'referral_source': 'paid_search', 'region_id': 'US-MO', 'unit_price': '39.99', '_kafka_key': 'US-MO', '_kafka_partition': 0, '_kafka_offset': 52}
+2026-06-16 01:43:39 | INFO | C06 | subtotal=39.99  tax=3.2  total=43.19  running_total=892.90
+2026-06-16 01:43:40 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:40 | INFO | C06 |   order=24b91995-25f8-4ad7-8fa6-2e4c15750e5e
+2026-06-16 01:43:40 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:40 | INFO | C06 | order=24b91995-25f8-4ad7-8fa6-2e4c15750e5e
+2026-06-16 01:43:40 | INFO | C06 | total=$43.19
+2026-06-16 01:43:40 | INFO | C06 | consumed=11
+2026-06-16 01:43:40 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:40 | INFO | C06 | total_sales=$892.90
+2026-06-16 01:43:40 | INFO | C06 | average=$81.17
+2026-06-16 01:43:40 | INFO | C06 | min=$43.19
+2026-06-16 01:43:40 | INFO | C06 | max=$194.82
+2026-06-16 01:43:40 | INFO | C06 | {'currency_code': 'CAD', 'customer_id': 'CUST-8062', 'customer_note': '', 'datetime': '2026-05-04T08:54:00Z', 'device_type': 'tablet', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': '1ec0fc8b-998c-4f43-8a66-19e1fa7d5fa8', 'payment_method': 'paypal', 'product_id': 'PY-SQL-004', 'quantity': '1', 'referral_source': 'organic', 'region_id': 'CA-ON', 'unit_price': '44.99', '_kafka_key': 'CA-ON', '_kafka_partition': 0, '_kafka_offset': 53}
+2026-06-16 01:43:40 | INFO | C06 | subtotal=44.99  tax=5.85  total=50.84  running_total=943.74
+2026-06-16 01:43:40 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:40 | INFO | C06 |   order=1ec0fc8b-998c-4f43-8a66-19e1fa7d5fa8
+2026-06-16 01:43:40 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:40 | INFO | C06 | order=1ec0fc8b-998c-4f43-8a66-19e1fa7d5fa8
+2026-06-16 01:43:40 | INFO | C06 | total=$50.84
+2026-06-16 01:43:40 | INFO | C06 | consumed=12
+2026-06-16 01:43:40 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:40 | INFO | C06 | total_sales=$943.74
+2026-06-16 01:43:40 | INFO | C06 | average=$78.65
+2026-06-16 01:43:40 | INFO | C06 | min=$43.19
+2026-06-16 01:43:40 | INFO | C06 | max=$194.82
+2026-06-16 01:43:40 | INFO | C06 | {'currency_code': 'USD', 'customer_id': 'CUST-4150', 'customer_note': 'Gift for my team', 'datetime': '2026-05-04T08:11:00Z', 'device_type': 'tablet', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': 'e7324981-a9f0-419f-b708-d0a333451fff', 'payment_method': 'paypal', 'product_id': 'PY-STREAM-005', 'quantity': '3', 'referral_source': 'paid_search', 'region_id': 'US-TX', 'unit_price': '59.99', '_kafka_key': 'US-TX', '_kafka_partition': 0, '_kafka_offset': 54}
+2026-06-16 01:43:40 | INFO | C06 | subtotal=179.97  tax=14.85  total=194.82  running_total=1138.56
+2026-06-16 01:43:41 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:41 | INFO | C06 |   order=e7324981-a9f0-419f-b708-d0a333451fff
+2026-06-16 01:43:41 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:41 | INFO | C06 | order=e7324981-a9f0-419f-b708-d0a333451fff
+2026-06-16 01:43:41 | INFO | C06 | total=$194.82
+2026-06-16 01:43:41 | INFO | C06 | consumed=13
+2026-06-16 01:43:41 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:41 | INFO | C06 | total_sales=$1,138.56
+2026-06-16 01:43:41 | INFO | C06 | average=$87.58
+2026-06-16 01:43:41 | INFO | C06 | min=$43.19
+2026-06-16 01:43:41 | INFO | C06 | max=$194.82
+2026-06-16 01:43:41 | INFO | C06 | {'currency_code': 'USD', 'customer_id': 'CUST-1106', 'customer_note': 'Gift for my team', 'datetime': '2026-05-04T08:23:00Z', 'device_type': 'mobile', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': 'd61943e0-f543-4b5f-9c9a-18605ea4cfe5', 'payment_method': 'paypal', 'product_id': 'PY-DATA-002', 'quantity': '1', 'referral_source': 'paid_search', 'region_id': 'US-TX', 'unit_price': '49.99', '_kafka_key': 'US-TX', '_kafka_partition': 0, '_kafka_offset': 55}
+2026-06-16 01:43:41 | INFO | C06 | subtotal=49.99  tax=4.12  total=54.11  running_total=1192.67
+2026-06-16 01:43:41 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:41 | INFO | C06 |   order=d61943e0-f543-4b5f-9c9a-18605ea4cfe5
+2026-06-16 01:43:41 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:41 | INFO | C06 | order=d61943e0-f543-4b5f-9c9a-18605ea4cfe5
+2026-06-16 01:43:41 | INFO | C06 | total=$54.11
+2026-06-16 01:43:41 | INFO | C06 | consumed=14
+2026-06-16 01:43:41 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:41 | INFO | C06 | total_sales=$1,192.67
+2026-06-16 01:43:41 | INFO | C06 | average=$85.19
+2026-06-16 01:43:41 | INFO | C06 | min=$43.19
+2026-06-16 01:43:41 | INFO | C06 | max=$194.82
+2026-06-16 01:43:41 | INFO | C06 | {'currency_code': 'CAD', 'customer_id': 'CUST-2133', 'customer_note': 'Learning at my own pace', 'datetime': '2026-05-04T08:28:00Z', 'device_type': 'desktop', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': '14da1915-8e74-47be-9e10-f7275d31af46', 'payment_method': 'paypal', 'product_id': 'PY-NLP-006', 'quantity': '1', 'referral_source': 'organic', 'region_id': 'CA-QC', 'unit_price': '54.99', '_kafka_key': 'CA-QC', '_kafka_partition': 0, '_kafka_offset': 56}
+2026-06-16 01:43:41 | INFO | C06 | subtotal=54.99  tax=8.23  total=63.22  running_total=1255.89
+2026-06-16 01:43:41 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:41 | INFO | C06 |   order=14da1915-8e74-47be-9e10-f7275d31af46
+2026-06-16 01:43:41 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:41 | INFO | C06 | order=14da1915-8e74-47be-9e10-f7275d31af46
+2026-06-16 01:43:41 | INFO | C06 | total=$63.22
+2026-06-16 01:43:41 | INFO | C06 | consumed=15
+2026-06-16 01:43:41 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:41 | INFO | C06 | total_sales=$1,255.89
+2026-06-16 01:43:41 | INFO | C06 | average=$83.73
+2026-06-16 01:43:41 | INFO | C06 | min=$43.19
+2026-06-16 01:43:41 | INFO | C06 | max=$194.82
+2026-06-16 01:43:41 | INFO | C06 | {'currency_code': 'USD', 'customer_id': 'CUST-5333', 'customer_note': 'Highly recommend', 'datetime': '2026-05-04T08:40:00Z', 'device_type': 'mobile', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': 'd77ed935-9b28-431d-bc25-0a3fd98f4154', 'payment_method': 'paypal', 'product_id': 'PY-STREAM-005', 'quantity': '1', 'referral_source': 'organic', 'region_id': 'US-CA', 'unit_price': '59.99', '_kafka_key': 'US-CA', '_kafka_partition': 0, '_kafka_offset': 57}
+2026-06-16 01:43:41 | INFO | C06 | subtotal=59.99  tax=5.7  total=65.69  running_total=1321.58
+2026-06-16 01:43:42 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:42 | INFO | C06 |   order=d77ed935-9b28-431d-bc25-0a3fd98f4154
+2026-06-16 01:43:42 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:42 | INFO | C06 | order=d77ed935-9b28-431d-bc25-0a3fd98f4154
+2026-06-16 01:43:42 | INFO | C06 | total=$65.69
+2026-06-16 01:43:42 | INFO | C06 | consumed=16
+2026-06-16 01:43:42 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:42 | INFO | C06 | total_sales=$1,321.58
+2026-06-16 01:43:42 | INFO | C06 | average=$82.60
+2026-06-16 01:43:42 | INFO | C06 | min=$43.19
+2026-06-16 01:43:42 | INFO | C06 | max=$194.82
+2026-06-16 01:43:42 | INFO | C06 | {'currency_code': 'USD', 'customer_id': 'CUST-8573', 'customer_note': 'Learning at my own pace', 'datetime': '2026-05-04T08:41:00Z', 'device_type': 'mobile', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': '24b91995-25f8-4ad7-8fa6-2e4c15750e5e', 'payment_method': 'apple_pay', 'product_id': 'PY-VIZ-003', 'quantity': '1', 'referral_source': 'paid_search', 'region_id': 'US-MO', 'unit_price': '39.99', '_kafka_key': 'US-MO', '_kafka_partition': 0, '_kafka_offset': 58}
+2026-06-16 01:43:42 | INFO | C06 | subtotal=39.99  tax=3.2  total=43.19  running_total=1364.77
+2026-06-16 01:43:42 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:42 | INFO | C06 |   order=24b91995-25f8-4ad7-8fa6-2e4c15750e5e
+2026-06-16 01:43:42 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:42 | INFO | C06 | order=24b91995-25f8-4ad7-8fa6-2e4c15750e5e
+2026-06-16 01:43:42 | INFO | C06 | total=$43.19
+2026-06-16 01:43:42 | INFO | C06 | consumed=17
+2026-06-16 01:43:42 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:42 | INFO | C06 | total_sales=$1,364.77
+2026-06-16 01:43:42 | INFO | C06 | average=$80.28
+2026-06-16 01:43:42 | INFO | C06 | min=$43.19
+2026-06-16 01:43:42 | INFO | C06 | max=$194.82
+2026-06-16 01:43:42 | INFO | C06 | {'currency_code': 'CAD', 'customer_id': 'CUST-8062', 'customer_note': '', 'datetime': '2026-05-04T08:54:00Z', 'device_type': 'tablet', 'discount_code': '', 'is_new_customer': 'false', 'is_online': 'true', 'order_id': '1ec0fc8b-998c-4f43-8a66-19e1fa7d5fa8', 'payment_method': 'paypal', 'product_id': 'PY-SQL-004', 'quantity': '1', 'referral_source': 'organic', 'region_id': 'CA-ON', 'unit_price': '44.99', '_kafka_key': 'CA-ON', '_kafka_partition': 0, '_kafka_offset': 59}
+2026-06-16 01:43:42 | INFO | C06 | subtotal=44.99  tax=5.85  total=50.84  running_total=1415.61
+2026-06-16 01:43:42 | INFO | C06 | Wrote valid record to DuckDB:
+2026-06-16 01:43:42 | INFO | C06 |   order=1ec0fc8b-998c-4f43-8a66-19e1fa7d5fa8
+2026-06-16 01:43:42 | INFO | C06 | MESSAGE ACCEPTED
+2026-06-16 01:43:42 | INFO | C06 | order=1ec0fc8b-998c-4f43-8a66-19e1fa7d5fa8
+2026-06-16 01:43:42 | INFO | C06 | total=$50.84
+2026-06-16 01:43:42 | INFO | C06 | consumed=18
+2026-06-16 01:43:42 | INFO | C06 | RUNNING STATS
+2026-06-16 01:43:42 | INFO | C06 | total_sales=$1,415.61
+2026-06-16 01:43:42 | INFO | C06 | average=$78.65
+2026-06-16 01:43:42 | INFO | C06 | min=$43.19
+2026-06-16 01:43:42 | INFO | C06 | max=$194.82
+2026-06-16 01:43:52 | INFO | C06 | No message received within 10.0s timeout.
+2026-06-16 01:43:52 | INFO | C06 | Producer finished or paused. Stopping consumer.
+2026-06-16 01:43:52 | INFO | C06 | Kafka consumer closed.
+2026-06-16 01:43:52 | INFO | C06 | Saving artifacts...
+2026-06-16 01:43:53 | INFO | C06 | WROTE OUTPUT_CHART = data/output/sales_chart_case.png
+2026-06-16 01:43:53 | INFO | C06 | WROTE OUTPUT_CSV = data/output/consumed_sales.csv
+2026-06-16 01:43:53 | INFO | C06 | WROTE OUTPUT_DB = data/output/sales.duckdb
+2026-06-16 01:43:53 | INFO | C06 | Live chart closed.
+2026-06-16 01:43:53 | INFO | C06 | ========================
+2026-06-16 01:43:53 | INFO | C06 | SECTION E. Exit
+2026-06-16 01:43:53 | INFO | C06 | ========================
+2026-06-16 01:43:53 | INFO | C06 | Summary:
+2026-06-16 01:43:53 | INFO | C06 | Consumed 18 message(s) from topic 'product-sales-case'.
+2026-06-16 01:43:53 | INFO | C06 | Skipped  0 message(s).
+2026-06-16 01:43:53 | INFO | C06 | OUTPUT_CSV = data/output/consumed_sales.csv
+2026-06-16 01:43:53 | INFO | C06 |   Total sales:  $1,415.61
+2026-06-16 01:43:53 | INFO | C06 |   Average sale: $78.65
+2026-06-16 01:43:53 | INFO | C06 |   Minimum sale: $43.19
+2026-06-16 01:43:53 | INFO | C06 |   Maximum sale: $194.82
+2026-06-16 01:43:53 | INFO | C06 | ========================
+2026-06-16 01:43:53 | INFO | C06 | Consumer executed successfully!
+2026-06-16 01:43:53 | INFO | C06 | ========================
