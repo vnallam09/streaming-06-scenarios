@@ -1,0 +1,167 @@
+2026-06-16 01:42:19 | DEBUG | P06 | No variables found in .env
+2026-06-16 01:42:19 | INFO | P06 | === RUN START ===
+2026-06-16 01:42:19 | INFO | P06 | project=P06
+2026-06-16 01:42:19 | INFO | P06 | repo_dir=streaming-06-scenarios
+2026-06-16 01:42:19 | INFO | P06 | python=3.14.5
+2026-06-16 01:42:19 | INFO | P06 | os=Linux 6.6.87.2-microsoft-standard-WSL2
+2026-06-16 01:42:19 | INFO | P06 | shell=bash
+2026-06-16 01:42:19 | INFO | P06 | cwd=.
+2026-06-16 01:42:19 | INFO | P06 | github_actions=False
+2026-06-16 01:42:19 | INFO | P06 | ========================
+2026-06-16 01:42:19 | INFO | P06 | START producer main()
+2026-06-16 01:42:19 | INFO | P06 | ========================
+2026-06-16 01:42:19 | INFO | P06 | ROOT_DIR = .
+2026-06-16 01:42:19 | INFO | P06 | DATA_DIR = data
+2026-06-16 01:42:19 | INFO | P06 | SALES_CSV = data/sales.csv
+2026-06-16 01:42:19 | INFO | P06 | REGIONS_CSV = data/regions.csv
+2026-06-16 01:42:19 | INFO | P06 | PRODUCTS_CSV = data/products.csv
+2026-06-16 01:42:19 | INFO | P06 | REJECTED_SALES_CSV = data/output/producer_rejected_sales.csv
+2026-06-16 01:42:19 | INFO | P06 | ========================
+2026-06-16 01:42:19 | INFO | P06 | SECTION A. Acquire
+2026-06-16 01:42:19 | INFO | P06 | ========================
+2026-06-16 01:42:19 | INFO | P06 | Loading settings from .env...
+2026-06-16 01:42:19 | INFO | P06 | KAFKA_BOOTSTRAP_SERVERS           = localhost:9092
+2026-06-16 01:42:19 | INFO | P06 | KAFKA_TOPIC                       = product-sales-case
+2026-06-16 01:42:19 | INFO | P06 | PRODUCER_MESSAGE_COUNT            = 6
+2026-06-16 01:42:19 | INFO | P06 | PRODUCER_MESSAGE_INTERVAL_SECONDS = 2.0
+2026-06-16 01:42:19 | INFO | P06 | KAFKA_CLEAR_TOPIC_ON_START        = False
+2026-06-16 01:42:19 | INFO | P06 | Verifying Kafka connection...
+2026-06-16 01:42:19 | INFO | P06 | Kafka port is reachable.
+2026-06-16 01:42:19 | INFO | P06 | Loading validation reference data...
+2026-06-16 01:42:19 | INFO | P06 | Found 6 valid regions, 6 valid products.
+2026-06-16 01:42:19 | INFO | P06 | ========================
+2026-06-16 01:42:19 | INFO | P06 | SECTION P. Produce Messages
+2026-06-16 01:42:19 | INFO | P06 | ========================
+2026-06-16 01:42:19 | INFO | P06 | Initializing output...
+2026-06-16 01:42:19 | INFO | P06 | Output directory ready: output
+2026-06-16 01:42:19 | INFO | P06 | Sending messages...
+2026-06-16 01:42:19 | INFO | P06 | Sending up to 6 message(s) to topic 'product-sales-case'.
+2026-06-16 01:42:19 | INFO | P06 | Watch each sale arrive. Press CTRL+C to stop early.
+
+2026-06-16 01:42:19 | INFO | P06 | {
+  order_id: e7324981-a9f0-419f-b708-d0a333451fff
+  datetime: 2026-05-04T08:11:00Z
+  region_id: US-TX
+  currency_code: USD
+  product_id: PY-STREAM-005
+  unit_price: 59.99
+  quantity: 3
+  is_online: true
+  customer_id: CUST-4150
+  is_new_customer: false
+  device_type: tablet
+  payment_method: paypal
+  referral_source: paid_search
+  discount_code: 
+  customer_note: Gift for my team
+}
+2026-06-16 01:42:19 | INFO | P06 |   Sending message with key=US-TX
+2026-06-16 01:42:19 | INFO | P06 |   MESSAGE SENT  sent=1
+2026-06-16 01:42:21 | INFO | P06 | {
+  order_id: d61943e0-f543-4b5f-9c9a-18605ea4cfe5
+  datetime: 2026-05-04T08:23:00Z
+  region_id: US-TX
+  currency_code: USD
+  product_id: PY-DATA-002
+  unit_price: 49.99
+  quantity: 1
+  is_online: true
+  customer_id: CUST-1106
+  is_new_customer: false
+  device_type: mobile
+  payment_method: paypal
+  referral_source: paid_search
+  discount_code: 
+  customer_note: Gift for my team
+}
+2026-06-16 01:42:21 | INFO | P06 |   Sending message with key=US-TX
+2026-06-16 01:42:21 | INFO | P06 |   MESSAGE SENT  sent=2
+2026-06-16 01:42:23 | INFO | P06 | {
+  order_id: 14da1915-8e74-47be-9e10-f7275d31af46
+  datetime: 2026-05-04T08:28:00Z
+  region_id: CA-QC
+  currency_code: CAD
+  product_id: PY-NLP-006
+  unit_price: 54.99
+  quantity: 1
+  is_online: true
+  customer_id: CUST-2133
+  is_new_customer: false
+  device_type: desktop
+  payment_method: paypal
+  referral_source: organic
+  discount_code: 
+  customer_note: Learning at my own pace
+}
+2026-06-16 01:42:23 | INFO | P06 |   Sending message with key=CA-QC
+2026-06-16 01:42:23 | INFO | P06 |   MESSAGE SENT  sent=3
+2026-06-16 01:42:25 | INFO | P06 | {
+  order_id: d77ed935-9b28-431d-bc25-0a3fd98f4154
+  datetime: 2026-05-04T08:40:00Z
+  region_id: US-CA
+  currency_code: USD
+  product_id: PY-STREAM-005
+  unit_price: 59.99
+  quantity: 1
+  is_online: true
+  customer_id: CUST-5333
+  is_new_customer: false
+  device_type: mobile
+  payment_method: paypal
+  referral_source: organic
+  discount_code: 
+  customer_note: Highly recommend
+}
+2026-06-16 01:42:25 | INFO | P06 |   Sending message with key=US-CA
+2026-06-16 01:42:25 | INFO | P06 |   MESSAGE SENT  sent=4
+2026-06-16 01:42:27 | INFO | P06 | {
+  order_id: 24b91995-25f8-4ad7-8fa6-2e4c15750e5e
+  datetime: 2026-05-04T08:41:00Z
+  region_id: US-MO
+  currency_code: USD
+  product_id: PY-VIZ-003
+  unit_price: 39.99
+  quantity: 1
+  is_online: true
+  customer_id: CUST-8573
+  is_new_customer: false
+  device_type: mobile
+  payment_method: apple_pay
+  referral_source: paid_search
+  discount_code: 
+  customer_note: Learning at my own pace
+}
+2026-06-16 01:42:27 | INFO | P06 |   Sending message with key=US-MO
+2026-06-16 01:42:27 | INFO | P06 |   MESSAGE SENT  sent=5
+2026-06-16 01:42:29 | INFO | P06 | {
+  order_id: 1ec0fc8b-998c-4f43-8a66-19e1fa7d5fa8
+  datetime: 2026-05-04T08:54:00Z
+  region_id: CA-ON
+  currency_code: CAD
+  product_id: PY-SQL-004
+  unit_price: 44.99
+  quantity: 1
+  is_online: true
+  customer_id: CUST-8062
+  is_new_customer: false
+  device_type: tablet
+  payment_method: paypal
+  referral_source: organic
+  discount_code: 
+  customer_note: 
+}
+2026-06-16 01:42:29 | INFO | P06 |   Sending message with key=CA-ON
+2026-06-16 01:42:29 | INFO | P06 |   MESSAGE SENT  sent=6
+2026-06-16 01:42:31 | INFO | P06 | Checking for rejected records...
+2026-06-16 01:42:31 | INFO | P06 |   No records rejected.
+2026-06-16 01:42:31 | INFO | P06 | ========================
+2026-06-16 01:42:31 | INFO | P06 | SECTION E. Exit
+2026-06-16 01:42:31 | INFO | P06 | ========================
+2026-06-16 01:42:31 | INFO | P06 | Summary:
+2026-06-16 01:42:31 | INFO | P06 | Sent 6 message(s) to topic 'product-sales-case'.
+2026-06-16 01:42:31 | INFO | P06 | Rejected 0 message(s).
+2026-06-16 01:42:31 | INFO | P06 | ========================
+2026-06-16 01:42:31 | INFO | P06 | Producer executed successfully!
+2026-06-16 01:42:31 | INFO | P06 | ========================
+2026-06-16 01:42:53 | DEBUG | C06 | No variables found in .env
+2026-06-16 01:42:53 | DEBUG | P06 | No variables found in .env
