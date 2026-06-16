@@ -107,3 +107,5 @@ dist/
 
 # WHY: Notebook checkpoint state is generated.
 .ipynb_checkpoints/
+
+.claude
