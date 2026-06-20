@@ -1,4 +1,4 @@
-"""src/streaming/data_engineering/derived_fields_teja.py.
+"""src/streaming/data_engineering/derived_fields_coffee_teja.py.
 
 Derived field calculations for COFFEE SHOP orders.
 

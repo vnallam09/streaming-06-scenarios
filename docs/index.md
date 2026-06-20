@@ -23,32 +23,40 @@ to get these projects running on your machine.
 
 ## Phases 4 & 5 - My Work (Teja)
 
-### Run commands
+### Phase 4 - technical modification (original sales data)
+
+Phase 4 is a copy of the case consumer, renamed
+[`kafka_consumer_teja.py`](../src/streaming/kafka_consumer_teja.py). It streams
+the **original** `data/sales.csv` (produced by the unchanged
+`kafka_producer_case.py`) and makes ONE small change: a **new derived field,
+`total_per_item`**.
+
+- The case derived `subtotal`, `tax_amount`, and `total`. I added
+  `total_per_item = total / quantity` - the all-in cost per unit (tax
+  included), so a 1-unit order and a 5-unit order can be compared fairly.
+- It is computed in `add_total_per_item()` right after the case enrichment,
+  logged for every message, and written as an extra trailing column in the
+  output CSV (`consumed_sales_teja.csv`).
+- Everything else (validation, the case line chart, DuckDB storage) is
+  unchanged from the case example.
 
 ```shell
-# Terminal 1: produce coffee orders
-uv run python -m streaming.kafka_producer_teja
-
-# Terminal 2: consume, validate, enrich, chart, and store
-uv run python -m streaming.kafka_consumer_teja
+# Phase 4 (original sales data)
+uv run python -m streaming.kafka_producer_case      # terminal 1
+uv run python -m streaming.kafka_consumer_teja      # terminal 2
 ```
-
-### Phase 4 - technical modification: a new derived field
-
-The case consumer derived `subtotal`, `tax_amount`, and `total`. I added a
-**new derived field, `loyalty_discount`**, in
-[`derived_fields_teja.py`](../src/streaming/data_engineering/derived_fields_teja.py):
-
-- Loyalty members (`is_loyalty = true`) receive **10% off the subtotal**.
-- Tax is then charged on the discounted amount, so `total` reflects the discount:
-  `total = (subtotal - loyalty_discount) + tax_amount`.
-- The new field flows all the way through: it is logged per message, written to
-  the output CSV, and stored as its own column in DuckDB.
 
 ### Phase 5 - applying the skills to a new dataset
 
 I applied the same streaming pattern to a brand-new scenario: a **coffee shop
-order stream** instead of online course sales.
+order stream** instead of online course sales. To keep the two phases separate,
+all coffee files are named `*_coffee_teja`.
+
+```shell
+# Phase 5 (coffee shop dataset)
+uv run python -m streaming.kafka_producer_coffee_teja   # terminal 1
+uv run python -m streaming.kafka_consumer_coffee_teja   # terminal 2
+```
 
 **What I chose in each area:**
 
@@ -66,13 +74,13 @@ order stream** instead of online course sales.
 **What the consumer does to each message:**
 
 1. Validates required fields against the coffee data contract
-   ([`data_contract_teja.py`](../src/streaming/data_validation/data_contract_teja.py)).
+   ([`data_contract_coffee_teja.py`](../src/streaming/data_validation/data_contract_coffee_teja.py)).
 2. Enriches valid orders with `subtotal`, `loyalty_discount`, `tax_amount`,
    and `total` (store tax rate comes from `stores.csv`).
 3. Updates the live **bar chart** of cumulative revenue per store
-   ([`live_visualizations_teja.py`](../src/streaming/visualizations/live_visualizations_teja.py)).
+   ([`live_visualizations_coffee_teja.py`](../src/streaming/visualizations/live_visualizations_coffee_teja.py)).
 4. Stores each order in DuckDB and appends it to the output CSV
-   ([`storage_teja.py`](../src/streaming/storage/storage_teja.py)); rejected
+   ([`storage_coffee_teja.py`](../src/streaming/storage/storage_coffee_teja.py)); rejected
    orders go to a separate table.
 
 **What the chart and stored data show / data insights** (from a 52-order run,

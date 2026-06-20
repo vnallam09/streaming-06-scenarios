@@ -1,4 +1,4 @@
-"""src/streaming/visualizations/live_visualizations_teja.py.
+"""src/streaming/visualizations/live_visualizations_coffee_teja.py.
 
 Live visualization for the COFFEE SHOP scenario (Phase 5).
 

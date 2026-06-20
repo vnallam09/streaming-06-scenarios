@@ -1,27 +1,33 @@
-"""src/streaming/kafka_consumer_teja.py.
+"""src/streaming/kafka_consumer_coffee_teja.py.
 
-Kafka consumer: full pipeline (Phase 4 - my copy of the case consumer).
+Kafka consumer for the COFFEE SHOP scenario - full pipeline.
 
-This is my copy of kafka_consumer_case.py, renamed for Phase 4.
-It streams the ORIGINAL sales data (data/sales.csv, produced by the unchanged
-kafka_producer_case.py) and makes ONE small technical modification:
+This is my copy of kafka_consumer_case.py (Phase 4 rename) extended to apply
+the streaming pattern to a new dataset (Phase 5).
 
-  *** NEW DERIVED FIELD: total_per_item ***
-  After the case enrichment (subtotal, tax_amount, total), I compute one more
-  derived field, total_per_item = total / quantity. It is the all-in cost per
-  unit (tax included), which lets you compare a 1-unit order to a 5-unit order
-  on an even footing. The new field is logged for every message and written as
-  an extra column in the output CSV.
+Phase 4 - technical modification:
+  - Adds a NEW derived field, loyalty_discount, computed in
+    derived_fields_coffee_teja.enrich_message().
 
-Everything else (validation, case enrichment, the live chart, and DuckDB
-storage) is unchanged from the case example.
+Phase 5 - apply the skills to a new problem (coffee shop orders):
+  - Different dataset: coffee orders + stores/drinks reference tables.
+  - Different live chart: a cumulative-revenue-by-store BAR chart
+    (live_visualizations_coffee_teja) instead of the case line chart.
+  - Different stored/queried fields: coffee order fields summarized by
+    store, drink size, and loyalty status (storage_coffee_teja).
+
+Reads coffee orders from a Kafka topic and runs the full pipeline:
+  - Validates each message against the coffee data contract
+  - Computes derived fields (subtotal, loyalty_discount, tax_amount, total)
+  - Updates a live bar chart of revenue by store
+  - Stores each valid order in a DuckDB database
 
 Author: Teja (adapted from Denise Case's kafka_consumer_case.py)
 Date: 2026-06
 
 Terminal command to run this file from the root project folder:
 
-    uv run python -m streaming.kafka_consumer_teja
+    uv run python -m streaming.kafka_consumer_coffee_teja
 """
 
 # === DECLARE IMPORTS ===
@@ -31,6 +37,7 @@ from pathlib import Path
 from typing import Any, Final
 
 from confluent_kafka.cimpl import OFFSET_BEGINNING, TopicPartition
+from datafun_streaming.data_validation.validation_utils import validate_required_fields
 from datafun_streaming.io.io_utils import append_csv_row, read_csv_as_lookup
 from datafun_streaming.kafka.kafka_admin_utils import (
     create_admin_client,
@@ -48,14 +55,18 @@ from datafun_toolkit.logger import get_logger, log_header, log_path
 from dotenv import load_dotenv
 
 from streaming.core.utils import log_env_vars
-from streaming.data_engineering.derived_fields import enrich_message
-from streaming.data_validation.data_contract_case import (
+from streaming.data_engineering.derived_fields_coffee_teja import enrich_message
+from streaming.data_validation.data_contract_coffee_teja import (
     CONSUMED_FIELDNAMES,
-    SALES_REQUIRED_FIELDS,
-    validate_required_fields,
+    ORDER_REQUIRED_FIELDS,
 )
-from streaming.storage.storage_case import init_db, write_valid_record
-from streaming.visualizations.live_visualizations_case import (
+from streaming.storage.storage_coffee_teja import (
+    init_db,
+    log_storage_summary,
+    write_rejected_record,
+    write_valid_record,
+)
+from streaming.visualizations.live_visualizations_coffee_teja import (
     close_live_chart,
     init_live_chart,
     save_live_chart,
@@ -83,19 +94,12 @@ ROOT_DIR: Final[Path] = Path.cwd()
 DATA_DIR: Final[Path] = ROOT_DIR / "data"
 OUTPUT_DIR: Final[Path] = DATA_DIR / "output"
 
-# My own output files so the pristine case outputs are left untouched.
-OUTPUT_CSV: Final[Path] = OUTPUT_DIR / "consumed_sales_teja.csv"
-OUTPUT_DB: Final[Path] = OUTPUT_DIR / "sales_teja.duckdb"
-OUTPUT_CHART: Final[Path] = OUTPUT_DIR / "sales_chart_teja.png"
+OUTPUT_CSV: Final[Path] = OUTPUT_DIR / "consumed_coffee_orders.csv"
+OUTPUT_DB: Final[Path] = OUTPUT_DIR / "coffee.duckdb"
+OUTPUT_CHART: Final[Path] = OUTPUT_DIR / "coffee_revenue_by_store_teja.png"
 
-REGIONS_CSV: Final[Path] = DATA_DIR / "regions.csv"
-PRODUCTS_CSV: Final[Path] = DATA_DIR / "products.csv"
-CURRENCIES_CSV: Final[Path] = DATA_DIR / "currencies.csv"
-DISCOUNT_CODES_CSV: Final[Path] = DATA_DIR / "discount_codes.csv"
-
-# The case writes CONSUMED_FIELDNAMES to the CSV. I add my new derived field
-# as one extra trailing column so it shows up in the output file too.
-OUTPUT_FIELDNAMES: Final[list[str]] = [*CONSUMED_FIELDNAMES, "total_per_item"]
+STORES_CSV: Final[Path] = DATA_DIR / "stores.csv"
+DRINKS_CSV: Final[Path] = DATA_DIR / "drinks.csv"
 
 
 # ==========================================================
@@ -107,17 +111,15 @@ def log_paths() -> None:
     """Log run header and all paths."""
     log_header(LOG, "C06-TEJA")
     LOG.info("========================")
-    LOG.info("START consumer main()")
+    LOG.info("START coffee consumer main()")
     LOG.info("========================")
     log_path(LOG, "ROOT_DIR", ROOT_DIR)
     log_path(LOG, "DATA_DIR", DATA_DIR)
     log_path(LOG, "OUTPUT_CSV", OUTPUT_CSV)
     log_path(LOG, "OUTPUT_DB", OUTPUT_DB)
     log_path(LOG, "OUTPUT_CHART", OUTPUT_CHART)
-    log_path(LOG, "REGIONS_CSV", REGIONS_CSV)
-    log_path(LOG, "PRODUCTS_CSV", PRODUCTS_CSV)
-    log_path(LOG, "CURRENCIES_CSV", CURRENCIES_CSV)
-    log_path(LOG, "DISCOUNT_CODES_CSV", DISCOUNT_CODES_CSV)
+    log_path(LOG, "STORES_CSV", STORES_CSV)
+    log_path(LOG, "DRINKS_CSV", DRINKS_CSV)
 
 
 def load_settings() -> KafkaSettings:
@@ -206,11 +208,11 @@ def get_kafka_consumer(settings: KafkaSettings) -> Any:
 # ===========================================================================
 
 
-def initialize_output() -> tuple[Any, Any, list[int], list[float], RunningStats]:
+def initialize_output() -> tuple[Any, Any, dict[str, float], RunningStats]:
     """Initialize output resources.
 
     Returns:
-        A tuple of (figure, axis, x_values, y_values, stats).
+        A tuple of (figure, axis, store_totals, stats).
     """
     LOG.info("Initializing output...")
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -222,95 +224,74 @@ def initialize_output() -> tuple[Any, Any, list[int], list[float], RunningStats]
     init_db(OUTPUT_DB)
     LOG.info(f"Database initialized: {OUTPUT_DB.name}")
 
-    figure, axis, x_values, y_values = init_live_chart()
+    figure, axis, store_totals = init_live_chart()
     LOG.info("Live chart initialized.")
 
     stats = RunningStats()
-    return figure, axis, x_values, y_values, stats
+    return figure, axis, store_totals, stats
 
 
 def load_reference_data() -> dict[str, float]:
     """Load reference data used for message enrichment.
 
     Returns:
-        A dictionary mapping region_id to tax rate as a float.
+        A dictionary mapping store_id to tax rate as a float.
     """
     LOG.info("Loading enrichment reference data...")
-    region_lookup: dict[str, float] = {
-        region_id: float(tax_rate_pct)
-        for region_id, tax_rate_pct in read_csv_as_lookup(
-            REGIONS_CSV,
-            key_field="region_id",
+    store_lookup: dict[str, float] = {
+        store_id: float(tax_rate_pct)
+        for store_id, tax_rate_pct in read_csv_as_lookup(
+            STORES_CSV,
+            key_field="store_id",
             value_field="tax_rate_pct",
         ).items()
     }
-    LOG.info(f"Found {len(region_lookup)} region tax rates.")
-    return region_lookup
-
-
-def add_total_per_item(enriched: dict[str, Any]) -> dict[str, Any]:
-    """Compute the NEW Phase 4 derived field, total_per_item.
-
-    total_per_item is the all-in cost per unit (tax included):
-        total_per_item = total / quantity
-
-    Arguments:
-        enriched: A row that already has the case derived field "total".
-
-    Returns:
-        The same row with "total_per_item" added (0.00 if quantity is 0).
-    """
-    quantity = int(enriched.get("quantity", 0))
-    total = float(enriched.get("total", 0.0))
-    enriched["total_per_item"] = round(total / quantity, 2) if quantity else 0.0
-    return enriched
+    LOG.info(f"Found {len(store_lookup)} store tax rates.")
+    return store_lookup
 
 
 def process_message(
     row: dict[str, Any],
     *,
-    region_lookup: dict[str, float],
+    store_lookup: dict[str, float],
     stats: RunningStats,
     figure: Any,
     axis: Any,
-    x_values: list[int],
-    y_values: list[float],
+    store_totals: dict[str, float],
 ) -> dict[str, Any] | None:
-    """Process one consumed message.
+    """Process one consumed coffee order.
 
     Steps:
       - Validate required fields
-      - Enrich with the case derived fields (subtotal, tax_amount, total)
-      - Add my new derived field (total_per_item)
+      - Enrich with derived fields (incl. the Phase 4 loyalty_discount)
       - Update running statistics
       - Update live chart
-      - Store in database
+      - Return the enriched order (or None if validation failed)
 
     Arguments:
         row: A raw consumed Kafka message row.
-        region_lookup: Tax rates by region_id.
+        store_lookup: Tax rates by store_id.
         stats: Running statistics accumulator.
         figure: Matplotlib figure.
         axis: Matplotlib axis.
-        x_values: List of x-axis values already shown.
-        y_values: List of y-axis values already shown.
+        store_totals: Running revenue per store_id (updated by the chart).
 
     Returns:
         The enriched row, or None if validation failed.
     """
-    errors = validate_required_fields(record=row, required_fields=SALES_REQUIRED_FIELDS)
+    errors = validate_required_fields(record=row, required_fields=ORDER_REQUIRED_FIELDS)
     if errors:
         LOG.warning(f"Validation failed for order {row.get('order_id', '?')}")
         LOG.warning(f"errors={errors}")
+        write_rejected_record(OUTPUT_DB, row, errors)
         return None
 
-    enriched = enrich_message(row, region_lookup)
-    enriched = add_total_per_item(enriched)
+    enriched = enrich_message(row, store_lookup)
     LOG.info(
         f"subtotal={enriched['subtotal']}  "
+        f"loyalty_discount={enriched['loyalty_discount']}  "
         f"tax={enriched['tax_amount']}  "
         f"total={enriched['total']}  "
-        f"total_per_item={enriched['total_per_item']}  "
         f"running_total={stats.total + enriched['total']:.2f}"
     )
 
@@ -319,8 +300,7 @@ def process_message(
     update_live_chart(
         figure=figure,
         axis=axis,
-        x_values=x_values,
-        y_values=y_values,
+        store_totals=store_totals,
         message=enriched,
     )
 
@@ -330,12 +310,11 @@ def process_message(
 def consume_messages(
     consumer: Any,
     *,
-    region_lookup: dict[str, float],
+    store_lookup: dict[str, float],
     stats: RunningStats,
     figure: Any,
     axis: Any,
-    x_values: list[int],
-    y_values: list[float],
+    store_totals: dict[str, float],
 ) -> tuple[int, int]:
     """Consume and process messages from the Kafka topic.
 
@@ -346,12 +325,11 @@ def consume_messages(
 
     Arguments:
         consumer: An open Kafka consumer subscribed to the topic.
-        region_lookup: Tax rates by region_id.
+        store_lookup: Tax rates by store_id.
         stats: Running statistics accumulator.
         figure: Matplotlib figure.
         axis: Matplotlib axis.
-        x_values: List of x-axis values already shown.
-        y_values: List of y-axis values already shown.
+        store_totals: Running revenue per store_id.
 
     Returns:
         A tuple of (consumed_count, skipped_count).
@@ -378,12 +356,11 @@ def consume_messages(
 
         enriched = process_message(
             row,
-            region_lookup=region_lookup,
+            store_lookup=store_lookup,
             stats=stats,
             figure=figure,
             axis=axis,
-            x_values=x_values,
-            y_values=y_values,
+            store_totals=store_totals,
         )
 
         if enriched is None:
@@ -398,21 +375,19 @@ def consume_messages(
         LOG.info("Wrote valid record to DuckDB:")
         LOG.info(f"  order={enriched['order_id']}")
 
-        # Write to the output CSV, including my new total_per_item column.
         append_csv_row(
             path=OUTPUT_CSV,
-            row={field: enriched.get(field, "") for field in OUTPUT_FIELDNAMES},
-            fieldnames=OUTPUT_FIELDNAMES,
+            row={field: enriched.get(field, "") for field in CONSUMED_FIELDNAMES},
+            fieldnames=CONSUMED_FIELDNAMES,
         )
 
         consumed_count += 1
         LOG.info("MESSAGE ACCEPTED")
         LOG.info(f"order={enriched['order_id']}")
         LOG.info(f"total=${enriched['total']:.2f}")
-        LOG.info(f"total_per_item=${enriched['total_per_item']:.2f}")
         LOG.info(f"consumed={consumed_count}")
         LOG.info("RUNNING STATS")
-        LOG.info(f"total_sales=${stats.total:,.2f}")
+        LOG.info(f"total_revenue=${stats.total:,.2f}")
         LOG.info(f"average=${stats.mean:,.2f}")
         LOG.info(f"min=${stats.minimum:,.2f}")
         LOG.info(f"max=${stats.maximum:,.2f}")
@@ -423,17 +398,13 @@ def consume_messages(
 def save_artifacts(figure: Any) -> None:
     """Save output artifacts or note their location.
 
-    Include saving the live chart.
-
     Arguments:
         figure: Matplotlib figure to save as an image.
     """
     LOG.info("Saving artifacts...")
 
-    # Save the live chart as an image file.
     save_live_chart(figure=figure, chart_path=OUTPUT_CHART)
 
-    # Log the paths of all output artifacts.
     log_path(LOG, "WROTE OUTPUT_CHART", OUTPUT_CHART)
     log_path(LOG, "WROTE OUTPUT_CSV", OUTPUT_CSV)
     log_path(LOG, "WROTE OUTPUT_DB", OUTPUT_DB)
@@ -457,13 +428,16 @@ def log_summary(
     log_path(LOG, "OUTPUT_CSV", OUTPUT_CSV)
 
     if stats.count > 0:
-        LOG.info(f"  Total sales:  ${stats.total:,.2f}")
-        LOG.info(f"  Average sale: ${stats.mean:,.2f}")
-        LOG.info(f"  Minimum sale: ${stats.minimum:,.2f}")
-        LOG.info(f"  Maximum sale: ${stats.maximum:,.2f}")
+        LOG.info(f"  Total revenue: ${stats.total:,.2f}")
+        LOG.info(f"  Average order: ${stats.mean:,.2f}")
+        LOG.info(f"  Minimum order: ${stats.minimum:,.2f}")
+        LOG.info(f"  Maximum order: ${stats.maximum:,.2f}")
+
+    # Run the coffee-specific DuckDB summary queries.
+    log_storage_summary(OUTPUT_DB)
 
     LOG.info("========================")
-    LOG.info("Consumer executed successfully!")
+    LOG.info("Coffee consumer executed successfully!")
     LOG.info("========================")
 
 
@@ -489,8 +463,8 @@ def main() -> None:
     LOG.info("SECTION C. Consume and Process Messages")
     LOG.info("========================")
 
-    figure, axis, x_values, y_values, stats = initialize_output()
-    region_lookup = load_reference_data()
+    figure, axis, store_totals, stats = initialize_output()
+    store_lookup = load_reference_data()
 
     consumed_count = 0
     skipped_count = 0
@@ -499,12 +473,11 @@ def main() -> None:
         try:
             consumed_count, skipped_count = consume_messages(
                 consumer,
-                region_lookup=region_lookup,
+                store_lookup=store_lookup,
                 stats=stats,
                 figure=figure,
                 axis=axis,
-                x_values=x_values,
-                y_values=y_values,
+                store_totals=store_totals,
             )
         finally:
             consumer.close()

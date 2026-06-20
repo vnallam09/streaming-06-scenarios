@@ -1,4 +1,4 @@
-"""src/streaming/storage/storage_teja.py.
+"""src/streaming/storage/storage_coffee_teja.py.
 
 DuckDB storage for the COFFEE SHOP scenario (Phase 5).
 
@@ -29,7 +29,7 @@ from datafun_streaming.storage.duckdb_sql import (
 from datafun_toolkit.logger import get_logger
 import duckdb
 
-from streaming.data_validation.data_contract_teja import (
+from streaming.data_validation.data_contract_coffee_teja import (
     CONSUMED_FIELDNAMES,
     REJECTED_ORDER_FIELDNAMES,
 )

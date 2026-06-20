@@ -1476,3 +1476,4 @@
 2026-06-19 19:25:57 | INFO | C06-TEJA | ========================
 2026-06-19 19:25:57 | INFO | C06-TEJA | Coffee consumer executed successfully!
 2026-06-19 19:25:57 | INFO | C06-TEJA | ========================
+2026-06-19 20:05:43 | DEBUG | C06-TEJA | No variables found in .env

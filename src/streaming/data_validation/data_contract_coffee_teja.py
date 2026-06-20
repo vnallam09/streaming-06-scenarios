@@ -1,4 +1,4 @@
-"""src/streaming/data_validation/data_contract_teja.py.
+"""src/streaming/data_validation/data_contract_coffee_teja.py.
 
 Data contract for the COFFEE SHOP scenario (Phase 5).
 
@@ -84,7 +84,7 @@ ALLOWED_PAYMENT_METHODS: Final[set[str]] = {
 
 # === OUTPUT FIELD ORDER ===
 
-# Derived fields added by derived_fields_teja.enrich_message():
+# Derived fields added by derived_fields_coffee_teja.enrich_message():
 #   subtotal, loyalty_discount (NEW in Phase 4), tax_amount, total
 CONSUMED_FIELDNAMES: Final[list[str]] = [
     *ORDER_REQUIRED_FIELDS,

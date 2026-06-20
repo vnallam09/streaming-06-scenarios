@@ -1,4 +1,4 @@
-"""src/streaming/kafka_producer_teja.py - Kafka producer for COFFEE SHOP orders.
+"""src/streaming/kafka_producer_coffee_teja.py - Kafka producer for COFFEE SHOP orders.
 
 This is my copy of kafka_producer_case.py, adapted for the coffee shop
 scenario (Phase 5). It reads coffee orders from data/coffee_orders.csv,
@@ -12,7 +12,7 @@ Date: 2026-06
 
 Terminal command to run this file from the root project folder:
 
-    uv run python -m streaming.kafka_producer_teja
+    uv run python -m streaming.kafka_producer_coffee_teja
 """
 
 # === DECLARE IMPORTS ===
@@ -41,7 +41,7 @@ from datafun_toolkit.logger import get_logger, log_header, log_path
 from dotenv import load_dotenv
 
 from streaming.core.utils import log_env_vars
-from streaming.data_validation.data_contract_teja import (
+from streaming.data_validation.data_contract_coffee_teja import (
     DRINKS_REQUIRED_FIELDS,
     REJECTED_ORDER_FIELDNAMES,
     STORES_REQUIRED_FIELDS,
