@@ -1,0 +1,6 @@
+store_id,store_name,city,state_code,tax_rate_pct,timezone
+S-KC,Plaza Roasters,Kansas City,MO,8.60,America/Chicago
+S-STL,Gateway Coffee,St. Louis,MO,9.18,America/Chicago
+S-CHI,Loop Espresso Bar,Chicago,IL,10.25,America/Chicago
+S-AUS,Congress Coffee Co,Austin,TX,8.25,America/Chicago
+S-DEN,Mile High Brews,Denver,CO,7.65,America/Denver

@@ -1,0 +1,9 @@
+drink_id,drink_name,category,base_price_usd,is_seasonal
+DR-LATTE,Latte,espresso,4.50,false
+DR-CAPP,Cappuccino,espresso,4.25,false
+DR-AMER,Americano,espresso,3.25,false
+DR-COLD,Cold Brew,cold,4.75,false
+DR-MOCHA,Mocha,espresso,5.00,false
+DR-DRIP,Drip Coffee,brewed,2.75,false
+DR-CHAI,Chai Latte,tea,4.50,true
+DR-MATCHA,Matcha Latte,tea,5.25,true
